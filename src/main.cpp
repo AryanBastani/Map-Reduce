@@ -49,6 +49,7 @@ class Program
         std::string code_office_msg();
         int exec_office();
         std::string code_wanted_resc();
+        void create_office_fifo();
 };
 
 Program::Program(std::string path)
@@ -69,6 +70,17 @@ int Program::make_pipes_path()
         return (1);
     }
     return(0);
+}
+
+void Program::create_office_fifo()
+{
+    lg.info("Creating fifo for office");
+
+    for(int i = 0; i < buildings.size(); i++)
+    {
+        std::string office_fifo = FIFO_PATH + buildings[i].c_str();
+        mkfifo(office_fifo.c_str(), 0666); 
+    }
 }
 
 std::string Program::clean_build_name(std::string path)
@@ -318,6 +330,8 @@ int Program::run()
     if(find_buildings())
         return(1);
 
+    create_office_fifo();
+    
     int building_pipes[buildings.size()][2];
     if(make_pipes(building_pipes))
         return(1);

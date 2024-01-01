@@ -54,7 +54,6 @@ class Building
         void wait_for_rescs();
         int parent_process(std::string msg, int index);
         void decode_resource_msg(char buffer[BUFF_SIZE], int index);
-        void create_office_fifo();
         void send_msg_to_office();
 };
 
@@ -64,6 +63,7 @@ Building::Building(const char* argv[])
     program_pipe[0] = std::stoi(argv[2]);
     program_pipe[1] = std::stoi(argv[3]);
     buildings_path = argv[4];
+    office_fifo = FIFO_PATH + name;
 }
 
 void Building::decode_prog_msg(char buffer[BUFF_SIZE])
@@ -240,14 +240,6 @@ int Building::create_resource_pipes()
     return(0);
 }
 
-void Building::create_office_fifo()
-{
-    lg.info("Creating fifo for office");
-
-    office_fifo = FIFO_PATH + name;
-    mkfifo(office_fifo.c_str(), 0666);
-}
-
 void Building::send_msg_to_office()
 {
     lg.info("Sending information of usage to Office");
@@ -264,6 +256,7 @@ void Building::send_msg_to_office()
             msg = code_info(ALL, wanted_elec);
 
         int fd = open(office_fifo.c_str(), O_WRONLY);
+        cout << "sending to fd = " << fd << '\n';
         write(fd, msg.c_str(), msg.size());
         close(fd);
     }
@@ -277,7 +270,6 @@ int Building::run()
         return(1);
     if(create_resource_procs())
         return(1);
-    create_office_fifo();
     send_msg_to_office();
 
     wait_for_rescs();

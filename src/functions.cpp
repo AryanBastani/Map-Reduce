@@ -6,7 +6,7 @@ using namespace std;
 
 const int BUFF_SIZE = 1024;
 const int NUM_OF_HOURS = 6;
-const std::string FIFO_PATH = "/fifos/";
+const std::string FIFO_PATH = "./fifos/";
 const int ALL = -1;
 
 const std::string WATER_NAME = "Water";

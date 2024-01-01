@@ -114,6 +114,7 @@ int Office::recv_names()
     close(program_pipe[1]);
     char buffer[BUFF_SIZE];
     int readed_bytes = read(program_pipe[0], buffer, BUFF_SIZE);
+    cout << buffer << '\n';
     close(program_pipe[0]);
     if(readed_bytes == -1)
     {
