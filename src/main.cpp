@@ -263,6 +263,13 @@ std::string Program::code_office_msg()
         if(i != wanted_resourses.size() - 1)
             message = message + ' ';
     }
+    message = message + " $ ";
+    for(int i = 0; i < wanted_months.size(); i++)
+    {
+        message = message + to_string(wanted_months[i]);
+        if(i != wanted_months.size() - 1)
+            message = message + ' ';
+    }
     message = message + '\0';
     return(message);
 }

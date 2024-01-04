@@ -93,18 +93,23 @@ void Office::decode_prog_msg(char buffer[BUFF_SIZE])
 {
     std::vector<std::string> msg = split_line(buffer, ' ');
     
-    int i = 0;
+    int i = 0, j = 0;
     for(i = 0; i < msg.size(); i++)
     {
         if(msg[i] == "$")
             break;
         builds_name.push_back(msg[i]);
     }
-    for(int j = i + 1; j < msg.size(); j++)
+    for(j = i + 1; j < msg.size(); j++)
     {
+        if(msg[j] == "$")
+            break;
         wanted_resources.push_back(msg[j]);
     }
-
+    for(int k = j + 1; k < msg.size(); k++)
+    {
+        wanted_months.push_back(stoi(msg[k]));
+    }
 }
 
 int Office::recv_names()
@@ -263,6 +268,7 @@ void Office:: recv_from_builds()
     for(int i = 0; i < builds_name.size(); i++)
     {
         std::string fifo = FIFO_PATH + builds_name[i];
+        cout << fifo << '\n';
         int fd = open(fifo.c_str(), O_RDONLY);
         for(int j = 0; j < wanted_resources.size(); j++)
         {

@@ -256,7 +256,6 @@ void Building::send_msg_to_office()
             msg = code_info(ALL, wanted_elec);
 
         int fd = open(office_fifo.c_str(), O_WRONLY);
-        cout << "sending to fd = " << fd << '\n';
         write(fd, msg.c_str(), msg.size());
         close(fd);
     }
